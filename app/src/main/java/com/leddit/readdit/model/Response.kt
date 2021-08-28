@@ -22,17 +22,17 @@ data class Response(
 @JsonClass(generateAdapter = true)
 data class Data(
     @Json(name = "after")
-    val after: String,
+    val after: String?,
     @Json(name = "before")
-    val before: Any,
+    val before: String?,
     @Json(name = "children")
     val children: List<Children>,
     @Json(name = "dist")
-    val dist: Int,
+    val dist: Int?,
     @Json(name = "geo_filter")
-    val geoFilter: String,
+    val geoFilter: String?,
     @Json(name = "modhash")
-    val modhash: String
+    val modhash: String?
 )
 
 @JsonClass(generateAdapter = true)
@@ -47,69 +47,67 @@ data class Children(
 @JsonClass(generateAdapter = true)
 data class Content(
     @Json(name = "banner_background_color")
-    val bannerBackgroundColor: String,
+    val bannerBackgroundColor: String?,
     @Json(name = "banner_background_image")
-    val bannerBackgroundImage: String,
+    val bannerBackgroundImage: String?,
     @Json(name = "banner_img")
-    val bannerImg: String,
+    val bannerImg: String?,
     @Json(name = "comment_score_hide_mins")
-    val commentScoreHideMins: Int,
+    val commentScoreHideMins: Int?,
     @Json(name = "community_icon")
-    val communityIcon: String,
+    val communityIcon: String?,
     @Json(name = "created")
-    val created: Double,
+    val created: Double?,
     @Json(name = "created_utc")
-    val createdUtc: Double,
+    val createdUtc: Double?,
     @Json(name = "description")
-    val description: String,
+    val description: String?,
     @Json(name = "display_name")
-    val displayName: String,
+    val displayName: String?,
     @Json(name = "display_name_prefixed")
-    val displayNamePrefixed: String,
+    val displayNamePrefixed: String?,
     @Json(name = "header_img")
-    val headerImg: Any,
-    @Json(name = "header_size")
-    val headerSize: Any,
+    val headerImg: String?,
     @Json(name = "header_title")
-    val headerTitle: Any,
+    val headerTitle: String?,
     @Json(name = "icon_img")
-    val iconImg: String,
+    val iconImg: String?,
     @Json(name = "id")
-    val id: String,
+    val id: String?,
     @Json(name = "key_color")
-    val keyColor: String,
+    val keyColor: String?,
     @Json(name = "lang")
-    val lang: String,
+    val lang: String?,
     @Json(name = "link_flair_position")
-    val linkFlairPosition: String,
+    val linkFlairPosition: String?,
     @Json(name = "mobile_banner_image")
-    val mobileBannerImage: String,
+    val mobileBannerImage: String?,
     @Json(name = "name")
-    val name: String,
+    val name: String?,
     @Json(name = "prediction_leaderboard_entry_type")
-    val predictionLeaderboardEntryType: String,
+    val predictionLeaderboardEntryType: String?,
     @Json(name = "primary_color")
-    val primaryColor: String,
+    val primaryColor: String?,
     @Json(name = "public_description")
-    val publicDescription: String,
+    val publicDescription: String?,
     @Json(name = "submission_type")
-    val submissionType: String,
+    val submissionType: String?,
     @Json(name = "submit_text")
-    val submitText: String,
+    val submitText: String?,
     @Json(name = "subreddit_type")
-    val subredditType: String,
+    val subredditType: String?,
     @Json(name = "subscribers")
-    val subscribers: Int,
+    val subscribers: Int?,
     @Json(name = "title")
-    val title: String,
+    val title: String?,
     @Json(name = "url")
-    val url: String,
+    val url: String?,
     @Json(name = "user_flair_position")
-    val userFlairPosition: String,
+    val userFlairPosition: String?,
     @Json(name = "user_flair_type")
-    val userFlairType: String,
+    val userFlairType: String?,
     @Json(name = "videostream_links_count")
-    val videostreamLinksCount: Int,
+    val videostreamLinksCount: Int?,
     @Json(name = "whitelist_status")
-    val whitelistStatus: String
+    val whitelistStatus: String?
 )

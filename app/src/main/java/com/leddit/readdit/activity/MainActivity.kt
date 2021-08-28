@@ -7,6 +7,7 @@ import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.leddit.readdit.databinding.TestMainBinding
 import com.leddit.readdit.model.RedditResponse
+import com.leddit.readdit.model.Response
 import com.leddit.readdit.viewmodel.MainActivityViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -21,28 +22,29 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binder = TestMainBinding.inflate(layoutInflater)
-//        setContentView(R.layout.test_main)
         setContentView(binder.root)
         getResponse()
     }
 
     private fun getResponse() {
         lifecycleScope.launchWhenStarted {
-            mainViewModel.getSubredditLists().collect {
-                when(it) {
-                    is RedditResponse.Done -> {
-                        showLogs("Request Done")
-                    }
-                    is RedditResponse.Failed -> {
-                        showLogs("Failed! ${it.error}")
-                    }
-                    is RedditResponse.Loading -> {
-                        showLogs("Loading...")
-                    }
-                    is RedditResponse.Success -> {
-                        showLogs("Success: Size: ${it.body.data.children.size}")
-                    }
-                }
+            mainViewModel.getSubredditLists().collect { processResponse(it) }
+        }
+    }
+
+    private fun processResponse(response: RedditResponse<Response>) {
+        when(response) {
+            is RedditResponse.Done -> {
+                showLogs("Request Done")
+            }
+            is RedditResponse.Failed -> {
+                showLogs("Failed! ${response.error}")
+            }
+            is RedditResponse.Loading -> {
+                showLogs("Loading...")
+            }
+            is RedditResponse.Success -> {
+                showLogs("Success: Size: ${response.body.data.children.size}")
             }
         }
     }

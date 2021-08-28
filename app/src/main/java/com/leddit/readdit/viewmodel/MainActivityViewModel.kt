@@ -18,10 +18,10 @@ class MainActivityViewModel @Inject constructor(
     private val repo: RedditRepository
 ) : ViewModel() {
 
-    fun getSubredditLists() = flow<RedditResponse<Response>> {
-        emit(RedditResponse.Loading())
-        val response = repo.getSubreddits()
+    fun getSubredditLists(afterValue: String? = null) = flow<RedditResponse<Response>> {
         try {
+            emit(RedditResponse.Loading())
+            val response = repo.getSubreddits(afterValue)
             emit(RedditResponse.Success(response))
         } catch (e: Exception) {
             emit(RedditResponse.Failed(e))
@@ -29,4 +29,21 @@ class MainActivityViewModel @Inject constructor(
             emit(RedditResponse.Done())
         }
     }.flowOn(Dispatchers.IO)
+
+    fun searchSubReddit(
+        afterValue: String? = null,
+        queryValue: String? = null
+    ) = flow<RedditResponse<Response>> {
+        try {
+            emit(RedditResponse.Loading())
+            val data = repo.searchSubreddits(
+                after = afterValue,
+                queryString = queryValue
+            )
+        } catch (e: Exception) {
+
+        }
+    }.flowOn(Dispatchers.IO)
+
+
 }
