@@ -27,7 +27,6 @@ android {
                         "room.expandProjection":"true"]
             }
         }
-        resConfigs ''
 
     }
 
