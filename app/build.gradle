@@ -6,6 +6,7 @@ plugins {
     id 'androidx.navigation.safeargs.kotlin'
 }
 
+
 android {
     compileSdk 30
 
@@ -26,7 +27,12 @@ android {
                         "room.expandProjection":"true"]
             }
         }
+        resConfigs ''
 
+    }
+
+    buildFeatures {
+        viewBinding true
     }
 
     buildTypes {
@@ -42,6 +48,20 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    /*flavorDimensions 'app'
+    productFlavors {
+        stage {
+            dimension 'app'
+            applicationId 'stage'
+            applicationIdSuffix '.stage'
+        }
+        live {
+            dimension 'app'
+            applicationId 'live'
+            applicationIdSuffix '.live'
+
+        }
+    }*/
 }
 
 dependencies {
@@ -58,6 +78,7 @@ dependencies {
     implementation("com.squareup.moshi:moshi:1.12.0")
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.2.1'
 
     implementation("com.google.dagger:hilt-android:2.38.1")
     kapt("com.google.dagger:hilt-android-compiler:2.38.1")
