@@ -26,7 +26,7 @@ data class Data(
     @Json(name = "before")
     val before: String?,
     @Json(name = "children")
-    val children: List<Children>,
+    val children: MutableList<Children>,
     @Json(name = "dist")
     val dist: Int?,
     @Json(name = "geo_filter")
