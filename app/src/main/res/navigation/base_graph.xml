@@ -13,10 +13,22 @@
         <action
             android:id="@+id/action_baseFragment_to_searchFragment"
             app:destination="@id/searchFragment" />
+        <action
+            android:id="@+id/action_baseFragment_to_subredditPostsFragment"
+            app:destination="@id/subredditPostsFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.leddit.readdit.fragment.SearchFragment"
         android:label="fragment_search"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/action_searchFragment_to_subredditPostsFragment"
+            app:destination="@id/subredditPostsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/subredditPostsFragment"
+        android:name="com.leddit.readdit.fragment.SubredditPostsFragment"
+        android:label="fragment_subreddit_posts"
+        tools:layout="@layout/fragment_subreddit_posts" />
 </navigation>

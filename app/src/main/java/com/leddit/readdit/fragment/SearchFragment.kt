@@ -11,10 +11,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.leddit.readdit.R
@@ -121,6 +123,14 @@ class SearchFragment : Fragment() {
             )
         }
 
+        adapter.clickListener = {
+            val args = bundleOf(Pair(SubredditPostsFragment.KEY_SUBREDDIT_NAME, it.displayName))
+            navigateTo(
+                R.id.action_searchFragment_to_subredditPostsFragment,
+                args
+            )
+        }
+
     }
 
     private fun setupToolbar() {
@@ -189,5 +199,12 @@ class SearchFragment : Fragment() {
         Log.d(TAG, msg)
     }
 
+    private fun navigateTo(id: Int, arg: Bundle? = null) {
+        if (arg == null) {
+            findNavController().navigate(id)
+        } else {
+            findNavController().navigate(id, arg)
+        }
+    }
 
 }

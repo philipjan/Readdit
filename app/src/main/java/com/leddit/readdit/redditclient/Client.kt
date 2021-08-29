@@ -4,12 +4,14 @@ import android.content.Context
 import androidx.core.content.ContextCompat
 import com.leddit.readdit.model.RedditResponse
 import com.leddit.readdit.model.Response
+import com.leddit.readdit.model.SubredditPostsResponse
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 import java.io.File
 import javax.inject.Inject
@@ -58,4 +60,10 @@ interface RedditService {
         @Query("q") queryString: String? = null,
         @Query("after") after: String? = null
     ): Response
+
+    @GET("/r/{subreddit}.json?limit=100")
+    suspend fun getSubredditPosts(
+        @Path("subreddit") subReddit: String,
+        @Query("after") after: String? = null
+    ): SubredditPostsResponse
 }

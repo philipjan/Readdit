@@ -1,6 +1,7 @@
 package com.leddit.readdit.di
 
 import com.leddit.readdit.adapter.RedditContentAdapter
+import com.leddit.readdit.adapter.SubRedditPostsAdapter
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,5 +14,10 @@ object AdapterModule {
     @Provides
     fun provideAdapter(): RedditContentAdapter {
         return RedditContentAdapter()
+    }
+
+    @Provides
+    fun provideSubRedditPostsAdaper(): SubRedditPostsAdapter {
+        return SubRedditPostsAdapter()
     }
 }

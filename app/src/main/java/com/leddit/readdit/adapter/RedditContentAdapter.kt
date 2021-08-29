@@ -18,6 +18,8 @@ class RedditContentAdapter() : ListAdapter<
     (ContentDiffUtilCallback()) {
     private val TAG = javaClass.simpleName
 
+    var clickListener: (content: Content) -> Unit = {_ ->}
+
     inner class RedditContentViewHolder(val binder: LiRedditContentBinding): RecyclerView.ViewHolder(binder.root) {
         fun bind(item: Content) {
 
@@ -27,6 +29,8 @@ class RedditContentAdapter() : ListAdapter<
                     0
                 ))
                 binder.wideBanner.load(updatedUrl)
+            } else {
+                binder.wideBanner.load(R.drawable.ic_noimage_placeholder3)
             }
 
             if (!item.communityIcon.isNullOrEmpty()) {
@@ -35,10 +39,16 @@ class RedditContentAdapter() : ListAdapter<
                     0
                 ))
                 binder.smallIcon.load(updatedUrl)
+            } else {
+                binder.smallIcon.load(R.drawable.ic_reddit_placeholder)
             }
 
             binder.subRedditName.text = item.displayName
             binder.subRedditOtherName.text = item.displayNamePrefixed
+
+            binder.root.setOnClickListener {
+                clickListener.invoke(item)
+            }
         }
     }
 

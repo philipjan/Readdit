@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.leddit.readdit.Readdit
 import com.leddit.readdit.model.RedditResponse
 import com.leddit.readdit.model.Response
+import com.leddit.readdit.model.SubredditPostsResponse
 import com.leddit.readdit.redditclient.RedditClient
 import com.leddit.readdit.repository.RedditRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -48,5 +49,22 @@ class MainActivityViewModel @Inject constructor(
         }
     }.flowOn(Dispatchers.IO)
 
+    fun getSubRedditPosts(
+        afterIndex: String? = null,
+        subReddit: String
+    ) = flow<RedditResponse<SubredditPostsResponse>> {
+        try {
+            emit(RedditResponse.Loading())
+            val data = repo.getSubRedditPosts(
+                subReddit = subReddit,
+                afterIndex = afterIndex
+            )
+            emit(RedditResponse.Success(data))
+        } catch (e: Exception) {
+            emit(RedditResponse.Failed(e))
+        } finally {
+            emit(RedditResponse.Done())
+        }
+    }.flowOn(Dispatchers.IO)
 
 }

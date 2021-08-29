@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.viewModels
+import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -103,6 +104,13 @@ class BaseFragment : Fragment() {
             )
             adapter = this@BaseFragment.adapter
         }
+        adapter.clickListener = {
+            val args = bundleOf(Pair(SubredditPostsFragment.KEY_SUBREDDIT_NAME, it.displayName))
+            navigateTo(
+                R.id.action_baseFragment_to_subredditPostsFragment,
+                args
+            )
+        }
     }
 
     private fun setupScrollListener() {
@@ -158,8 +166,12 @@ class BaseFragment : Fragment() {
         }
     }
 
-    private fun navigateTo(id: Int) {
-        findNavController().navigate(id)
+    private fun navigateTo(id: Int, arg: Bundle? = null) {
+        if (arg == null) {
+            findNavController().navigate(id)
+        } else {
+            findNavController().navigate(id, arg)
+        }
     }
 
 }

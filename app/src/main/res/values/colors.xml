@@ -9,4 +9,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="text_white">#ECECEC</color>
     <color name="gradient_dark">#88000000</color>
+    <color name="reddit_bg_dark">#1A1A1B</color>
 </resources>
