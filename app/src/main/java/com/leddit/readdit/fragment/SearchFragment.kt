@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
@@ -32,6 +33,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
+import java.net.UnknownHostException
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -103,16 +106,18 @@ class SearchFragment : Fragment() {
                         super.onScrollStateChanged(recyclerView, newState)
                         if (!recyclerView.canScrollVertically(1) &&
                             newState == RecyclerView.SCROLL_STATE_IDLE) {
-                            val lastStringIdx = this@SearchFragment
-                                .adapter
-                                .currentList[
-                                    this@SearchFragment.adapter.currentList.lastIndex
-                                ].name
-                            lastStringIndex = lastStringIdx
-                            searchItem(
-                                query = queryString,
-                                after = lastStringIdx
-                            )
+                                if (!this@SearchFragment.adapter.currentList.isNullOrEmpty()) {
+                                    val lastStringIdx = this@SearchFragment
+                                        .adapter
+                                        .currentList[
+                                            this@SearchFragment.adapter.currentList.lastIndex
+                                    ].name
+                                    lastStringIndex = lastStringIdx
+                                    searchItem(
+                                        query = queryString,
+                                        after = lastStringIdx
+                                    )
+                                }
                         }
                     }
 
@@ -176,7 +181,7 @@ class SearchFragment : Fragment() {
                 lastStringIndex = null
             }
             is RedditResponse.Failed -> {
-                showLogs("Failed: ${response.error}")
+                handleError(response.error)
             }
             is RedditResponse.Success -> {
                 val data = response.body.data.children.map {
@@ -205,6 +210,29 @@ class SearchFragment : Fragment() {
         } else {
             findNavController().navigate(id, arg)
         }
+    }
+
+    private fun handleError(e: Exception) {
+        when(e) {
+            is UnknownHostException -> {
+                showToast("Please check your internet connection and try again")
+            }
+            is HttpException -> {
+                when(e.code()) {
+                    404,
+                    500,
+                    501,
+                    502,
+                    503-> {
+                        showToast("A server error occured. Please try again later.")
+                    }
+                }
+            }
+        }
+    }
+
+    private fun showToast(msg: String) {
+        Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
     }
 
 }

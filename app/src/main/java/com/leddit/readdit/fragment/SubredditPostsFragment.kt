@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,11 +21,14 @@ import com.leddit.readdit.model.SubredditPostsResponse
 import com.leddit.readdit.viewmodel.MainActivityViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import retrofit2.HttpException
+import java.net.UnknownHostException
 import javax.inject.Inject
 
 
 @AndroidEntryPoint
 class SubredditPostsFragment : Fragment() {
+    private val TAG = javaClass.simpleName
 
     private lateinit var binder: FragmentSubredditPostsBinding
     @Inject lateinit var adapter: SubRedditPostsAdapter
@@ -98,16 +102,18 @@ class SubredditPostsFragment : Fragment() {
                         super.onScrollStateChanged(recyclerView, newState)
                         if (!recyclerView.canScrollVertically(1) &&
                             newState == RecyclerView.SCROLL_STATE_IDLE) {
-                            val lastString = this@SubredditPostsFragment
-                                .adapter
-                                .currentList[
-                                    this@SubredditPostsFragment.adapter.currentList.lastIndex
-                                ].name
-                            lastStringIndex = lastString
-                            getSubRedditPosts(
-                                subReddit = getArgs(),
-                                afterIndex = lastStringIndex
-                            )
+                                if (!this@SubredditPostsFragment.adapter.currentList.isNullOrEmpty()) {
+                                    val lastString = this@SubredditPostsFragment
+                                        .adapter
+                                        .currentList[
+                                            this@SubredditPostsFragment.adapter.currentList.lastIndex
+                                    ].name
+                                    lastStringIndex = lastString
+                                    getSubRedditPosts(
+                                        subReddit = getArgs(),
+                                        afterIndex = lastStringIndex
+                                    )
+                                }
                         }
                     }
 
@@ -147,7 +153,7 @@ class SubredditPostsFragment : Fragment() {
                 setSwipeRefresh(false)
             }
             is RedditResponse.Failed -> {
-
+               handleError(data.error)
             }
             is RedditResponse.Success -> {
                 val filteredData = data.body.data?.children?.map {
@@ -173,6 +179,33 @@ class SubredditPostsFragment : Fragment() {
             i.data = Uri.parse("$VALUE_DEFAULT_PAGE_REDDIT_URL$url")
         }
         startActivity(i)
+    }
+
+    private fun showLogs(msg: String) {
+        Log.d(TAG, msg)
+    }
+
+    private fun handleError(e: Exception) {
+        when(e) {
+            is UnknownHostException -> {
+                showToast("Please check your internet connection and try again")
+            }
+            is HttpException -> {
+                when(e.code()) {
+                    404,
+                    500,
+                    501,
+                    502,
+                    503-> {
+                        showToast("A server error occured. Please try again later.")
+                    }
+                }
+            }
+        }
+    }
+
+    private fun showToast(msg: String) {
+        Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
     }
 
 }

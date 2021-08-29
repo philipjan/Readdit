@@ -1,10 +1,12 @@
 package com.leddit.readdit.fragment
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
@@ -21,10 +23,16 @@ import com.leddit.readdit.model.Response
 import com.leddit.readdit.viewmodel.MainActivityViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import okhttp3.internal.http1.Http1ExchangeCodec
+import okhttp3.internal.http2.Http2
+import retrofit2.HttpException
+import retrofit2.http.HTTP
+import java.net.UnknownHostException
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class BaseFragment : Fragment() {
+    private val TAG = javaClass.simpleName
 
     private lateinit var binder: FragmentBaseBinding
 
@@ -74,6 +82,7 @@ class BaseFragment : Fragment() {
             is RedditResponse.Failed -> {
                 lastStringIndex = null
                 setupSwipeLoading(false)
+                handleError(response.error)
             }
             is RedditResponse.Loading -> {
                 setupSwipeLoading(true)
@@ -120,9 +129,11 @@ class BaseFragment : Fragment() {
                     super.onScrollStateChanged(recyclerView, newState)
                     if (!recyclerView.canScrollVertically(1) &&
                         newState == RecyclerView.SCROLL_STATE_IDLE) {
-                        val lastString = adapter.currentList[adapter.currentList.lastIndex].name
-                        lastStringIndex = lastString
-                        getResponse(lastString)
+                            if (!adapter.currentList.isNullOrEmpty()) {
+                                val lastString = adapter.currentList[adapter.currentList.lastIndex].name
+                                lastStringIndex = lastString
+                                getResponse(lastString)
+                            }
                     }
 
                     binder.searchFab.run {
@@ -172,6 +183,33 @@ class BaseFragment : Fragment() {
         } else {
             findNavController().navigate(id, arg)
         }
+    }
+
+    private fun showLogs(msg: String) {
+        Log.d(TAG, msg)
+    }
+
+    private fun handleError(e: Exception) {
+       when(e) {
+           is UnknownHostException -> {
+               showToast("Please check your internet connection and try again")
+           }
+           is HttpException -> {
+               when(e.code()) {
+                   404,
+                   500,
+                   501,
+                   502,
+                   503-> {
+                        showToast("A server error occured. Please try again later.")
+                   }
+               }
+           }
+       }
+    }
+
+    private fun showToast(msg: String) {
+        Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
     }
 
 }
