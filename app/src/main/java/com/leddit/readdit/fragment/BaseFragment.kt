@@ -192,7 +192,7 @@ class BaseFragment : Fragment() {
     private fun handleError(e: Exception) {
        when(e) {
            is UnknownHostException -> {
-               showToast("Please check your internet connection and try again")
+               showToast(getString(R.string.error_msg_no_internet))
            }
            is HttpException -> {
                when(e.code()) {
@@ -201,7 +201,7 @@ class BaseFragment : Fragment() {
                    501,
                    502,
                    503-> {
-                        showToast("A server error occured. Please try again later.")
+                        showToast(getString(R.string.error_msg_server))
                    }
                }
            }
