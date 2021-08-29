@@ -53,7 +53,7 @@ interface RedditService {
     @GET("/subreddits.json?limit=100")
     suspend fun getSubReddits(@Query("after") after: String? = null): Response
 
-    @GET("/subreddits/search.json?include_over_18=false")
+    @GET("/subreddits/search.json?limit=100&include_over_18=false")
     suspend fun searchSubReddit(
         @Query("q") queryString: String? = null,
         @Query("after") after: String? = null

@@ -16,6 +16,9 @@ class RedditRepository @Inject constructor(
         after: String? = null,
         queryString: String?
     ): Response {
-        return redditApi.searchSubReddit(after, queryString)
+        return redditApi.searchSubReddit(
+            queryString = queryString,
+            after = after
+        )
     }
 }

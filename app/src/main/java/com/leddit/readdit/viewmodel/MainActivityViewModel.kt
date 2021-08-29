@@ -40,8 +40,11 @@ class MainActivityViewModel @Inject constructor(
                 after = afterValue,
                 queryString = queryValue
             )
+            emit(RedditResponse.Success(data))
         } catch (e: Exception) {
-
+            emit(RedditResponse.Failed(e))
+        } finally {
+           emit( RedditResponse.Done())
         }
     }.flowOn(Dispatchers.IO)
 
