@@ -8,7 +8,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.leddit.readdit.adapter.RedditContentAdapter
-import com.leddit.readdit.databinding.TestMainBinding
+import com.leddit.readdit.databinding.ActivityMainBinding
 import com.leddit.readdit.model.RedditResponse
 import com.leddit.readdit.model.Response
 import com.leddit.readdit.viewmodel.MainActivityViewModel
@@ -20,43 +20,58 @@ import javax.inject.Inject
 class MainActivity : AppCompatActivity() {
     private val TAG = this::class.java.simpleName
 
-    private lateinit var binder: TestMainBinding
+    private lateinit var binder: ActivityMainBinding
 
     @Inject lateinit var adapter: RedditContentAdapter
     private val mainViewModel: MainActivityViewModel by viewModels()
 
+    companion object {
+        var lastStringIndex: String? = ""
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binder = TestMainBinding.inflate(layoutInflater)
+        binder = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binder.root)
+        setupSwipeListener()
+        setupScrollListener()
         setupAdapter()
         getResponse()
 
     }
 
-    private fun getResponse() {
+    private fun getResponse(afterString: String? = null) {
         lifecycleScope.launchWhenStarted {
-            mainViewModel.getSubredditLists().collect { processResponse(it) }
+            mainViewModel.getSubredditLists(afterValue = afterString).collect { processResponse(it) }
         }
     }
 
     private fun processResponse(response: RedditResponse<Response>) {
         when(response) {
             is RedditResponse.Done -> {
-                showLogs("Request Done")
+                lastStringIndex = null
+                setupSwipeLoading(false)
             }
             is RedditResponse.Failed -> {
-                showLogs("Failed! ${response.error}")
+                lastStringIndex = null
+                setupSwipeLoading(false)
             }
             is RedditResponse.Loading -> {
-                showLogs("Loading...")
+                setupSwipeLoading(true)
             }
             is RedditResponse.Success -> {
-                showLogs("Success: Size: ${response.body.data.children.size}")
                 val list = response.body.data.children.map {
                     it.data
                 }
-                adapter.submitList(list)
+
+                if (lastStringIndex.isNullOrEmpty()) {
+                    adapter.submitList(list)
+                } else {
+                    val currentToBeUpdatedList = adapter.currentList.toMutableList()
+                    currentToBeUpdatedList.addAll(list)
+                    adapter.submitList(currentToBeUpdatedList)
+                }
+
             }
         }
     }
@@ -70,6 +85,38 @@ class MainActivity : AppCompatActivity() {
             )
             adapter = this@MainActivity.adapter
         }
+    }
+
+    private fun setupScrollListener() {
+        binder.subRedditRecyclerView.addOnScrollListener(
+            object : RecyclerView.OnScrollListener() {
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                    super.onScrollStateChanged(recyclerView, newState)
+                    if (!recyclerView.canScrollVertically(1) &&
+                        newState == RecyclerView.SCROLL_STATE_IDLE) {
+                        val lastString = adapter.currentList[adapter.currentList.lastIndex].name
+                        lastStringIndex = lastString
+                        getResponse(lastString)
+                    }
+                }
+
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                }
+            }
+        )
+    }
+
+    private fun setupSwipeListener() {
+        binder.swipeRefreshLayout.setOnRefreshListener {
+            if (lastStringIndex.isNullOrEmpty()) {
+                getResponse()
+            }
+        }
+    }
+
+    private fun setupSwipeLoading(isLoading: Boolean) {
+        binder.swipeRefreshLayout.isRefreshing = isLoading
     }
 
     private fun showLogs(msg: String) {
