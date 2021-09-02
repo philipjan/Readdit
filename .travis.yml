@@ -5,7 +5,6 @@ dist: trusty
 #make gradle executable
 before_install:
   - chmod +x gradlew
-  - yes | sdkmanager "platforms;android-30"
   - yes | sdkmanager "build-tools;30.0.2"
 
 android:
