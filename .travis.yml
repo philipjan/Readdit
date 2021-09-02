@@ -11,7 +11,6 @@ android:
   components:
     - tools
     - platform-tools
-    - android-30
     - extra
 
 #add jdk 11 as gradle plugin version on travis is 7.0.2
