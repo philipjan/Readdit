@@ -8,7 +8,6 @@ class Readdit : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        // test commit
     }
 
 }
