@@ -1,5 +1,11 @@
 language: android
+# Linux
 dist: trusty
+
+#make gradle executable
+before_install:
+  - chmod +x gradlew
+
 android:
   components:
     - build-tools-31.0.0
