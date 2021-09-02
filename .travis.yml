@@ -10,6 +10,7 @@ before_install:
 
 android:
   components:
+    - platform-tools
     - build-tools-30.0.2
     - android-30
     - tools
