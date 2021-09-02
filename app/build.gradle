@@ -48,6 +48,7 @@ android {
         jvmTarget = '1.8'
     }
     compileSdkVersion 30
+    buildToolsVersion '30.0.0'
     /*flavorDimensions 'app'
     productFlavors {
         stage {

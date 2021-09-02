@@ -5,7 +5,7 @@ dist: trusty
 #make gradle executable
 before_install:
   - chmod +x gradlew
-  #- yes | sdkmanager "build-tools;30.0.2"
+  - yes | sdkmanager "build-tools;30.0.0"
   - yes | sdkmanager "platforms;android-30"
 
 android:
@@ -14,6 +14,7 @@ android:
     - tools
     - platform-tools
     - extra
+    - build-tools-30.0.0
 
 #add jdk 11 as gradle plugin version on travis is 7.0.2
 jdk:
