@@ -6,7 +6,6 @@ dist: trusty
 before_install:
   - chmod +x gradlew
   #accept licenses
-  - yes | sdkmanager "platforms;android-30"
   - yes | sdkmanager --licenses
 
 android:
