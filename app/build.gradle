@@ -13,12 +13,13 @@ android {
     properties.load(project.rootProject.file("local.properties").newDataInputStream())
 
     signingConfigs {
-        release {
+        /*release {
             storeFile file('/home/philip/AndroidStudioProjects/Readdit/readdit.jks')
             storePassword properties.getProperty("KEYSTORE_ALIAS_PW")
             keyAlias properties.getProperty("KEYSTORE_ALIAS")
             keyPassword properties.getProperty("KEYSTORE_PW")
-        }
+        }*/
+        release
     }
     compileSdk 30
 
