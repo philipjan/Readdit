@@ -28,6 +28,17 @@ android:
   - extra
   - extra-android-m2repository
   - extra-google-m2repository
+deploy:
+  provider: releases
+  skip_cleanup: true
+  overwrite: true
+  api_key:
+    secure: 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
+  file_glob: true
+  file: /home/travis/build/philipjan/Readdit/app/release/*
+  on:
+    repo: philipjan/Readdit
+    tags: true
 jdk:
 - openjdk11
 script:
