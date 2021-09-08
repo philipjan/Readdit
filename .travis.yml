@@ -28,6 +28,9 @@ android:
   - extra
   - extra-android-m2repository
   - extra-google-m2repository
+branches:
+  only:
+    - master
 deploy:
   provider: releases
   skip_cleanup: true
