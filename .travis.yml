@@ -28,9 +28,11 @@ android:
   - extra
   - extra-android-m2repository
   - extra-google-m2repository
+# branches travis will look into
 branches:
   only:
     - master
+# deployment
 deploy:
   provider: releases
   skip_cleanup: true
