@@ -8,6 +8,18 @@ plugins {
 
 
 android {
+
+    def Properties properties = new Properties()
+    properties.load(project.rootProject.file("local.properties").newDataInputStream())
+
+    signingConfigs {
+        release {
+            storeFile file('/home/philip/AndroidStudioProjects/Readdit/readdit.jks')
+            storePassword properties.getProperty("KEYSTORE_ALIAS_PW")
+            keyAlias properties.getProperty("KEYSTORE_ALIAS")
+            keyPassword properties.getProperty("KEYSTORE_PW")
+        }
+    }
     compileSdk 30
 
     defaultConfig {
@@ -38,6 +50,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
     compileOptions {
@@ -49,20 +62,7 @@ android {
     }
     compileSdkVersion 30
     buildToolsVersion '30.0.2'
-    /*flavorDimensions 'app'
-    productFlavors {
-        stage {
-            dimension 'app'
-            applicationId 'stage'
-            applicationIdSuffix '.stage'
-        }
-        live {
-            dimension 'app'
-            applicationId 'live'
-            applicationIdSuffix '.live'
 
-        }
-    }*/
 }
 
 dependencies {
